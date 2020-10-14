@@ -1,0 +1,11 @@
+Accuracy,ClassificationReport,ConfusionMatrix,F1-Macro,NPV,PPV,Precision-Macro,Recall-Macro
+0.8752941176470588,"              precision    recall  f1-score   support
+
+           0       0.96      0.90      0.93       384
+           1       0.41      0.68      0.51        41
+
+    accuracy                           0.88       425
+   macro avg       0.69      0.79      0.72       425
+weighted avg       0.91      0.88      0.89       425
+","[[344  40]
+ [ 13  28]]",0.7211182508140499,0.9635854341736695,0.4117647058823529,0.6876750700280112,0.789380081300813
