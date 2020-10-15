@@ -14,14 +14,14 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
 
 from pylab import rcParams
-from Models.Utils import aggregate_static_features, aggregate_outcomes
+from Models.UtilsEqualDistributions import aggregate_static_features, aggregate_outcomes
 import numpy as np
 np.seterr(divide='ignore')
 
 from Models.Constraints import WeightsOrthogonalityConstraint, UncorrelatedFeaturesConstraint, AttentionDecoder
 from numpy.random import seed
 
-from Models.Utils import get_train_test_split, generate_aggregates
+from Models.UtilsEqualDistributions import get_train_test_split, generate_aggregates
 from Models.XGBoost.XGBoost import XGBoostClassifier
 import os.path
 
@@ -46,7 +46,7 @@ def main () :
     test_data_path = configs['paths']['test_data_path']
 
     ##read, impute and scale dataset
-    non_smotedtime_series = pd.read_csv(timeseries_path + "TimeSeriesAggregatedUpto0.csv")
+    non_smotedtime_series = pd.read_csv(timeseries_path + "TimeSeriesAggregatedUpto0NonCum.csv")
     #non_smotedtime_series[dynamic_features] = impute(non_smotedtime_series, dynamic_features)
     xgboost_series_original = non_smotedtime_series.loc[:,dynamic_features+static_features]
     normalized_timeseries = non_smotedtime_series.loc[:,dynamic_features]
@@ -144,7 +144,7 @@ def main () :
             X_train_aggregates = generate_aggregates ( X_train, dynamic_features, lookback ) #ZI CHANGE TO BATCH SIZE
             X_train_static = aggregate_static_features(X_train, static_features, lookback)
             X_train = pd.concat([X_train_aggregates, X_train_static.reindex(X_train_aggregates.index)], axis=1)
-            X_train['mse'] = mse_train
+            X_train['mse'] = np.sqrt(mse_train)
             y_train = aggregate_outcomes( y_train_full, lookback)
             print(" DIM OF XGB AGGREGATE DF TRAIN: ", X_train.shape)
             print(" LEN OF XGB AGGREGATE DF TRAIN OUTCOME: ", len(y_train))
@@ -154,7 +154,7 @@ def main () :
             X_test_aggregates = generate_aggregates(X_test, dynamic_features, lookback)  # ZI CHANGE TO BATCH SIZE
             X_test_static = aggregate_static_features(X_test, static_features, lookback)
             X_test = pd.concat([X_test_aggregates, X_test_static.reindex(X_test_aggregates.index)], axis=1)
-            X_test['mse'] = mse_test
+            X_test['mse'] = np.sqrt(mse_test)
             y_test = aggregate_outcomes( y_test_full, lookback)
             print(" DIM OF XGB AGGREGATE DF TEST: ", X_test.shape)
             print(" LEN OF XGB AGGREGATE DF TEST OUTCOME: ", len(y_test))
@@ -166,7 +166,7 @@ def main () :
                                                                   y_train, outcome, grouping)
 
             print(" checking train and test dims in xgboost: ", X_train.shape, len(y_train))
-            static_baseline_classifier.fit("aggregate_static", np.sqrt(mse_train))
+            static_baseline_classifier.fit("aggregate_static", mse_train*100)
 
             print(X_test.head())
             print(" PASSED Y TEST: ")

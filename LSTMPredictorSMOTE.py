@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 import Models
 from Models.LSTMAutoEncoder.Utils import temporalize, flatten, scale, curve_shift
 from Models.RiskScore.VisualisePopulation import DecisionMaker
-from Models.Utils import generate_slopes, get_distribution_percentages
+from Models.UtilsEqualDistributions import generate_slopes, get_distribution_percentages
 
 import matplotlib.pyplot as plt
 import seaborn as sns

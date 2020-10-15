@@ -13,7 +13,7 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
 
 from pylab import rcParams
-from Models.Utils import class_weights, class_counts, aggregate_static_features, aggregate_outcomes
+from Models.UtilsEqualDistributions import class_weights, class_counts, aggregate_static_features, aggregate_outcomes
 import numpy as np
 np.seterr(divide='ignore')
 
@@ -22,7 +22,7 @@ from keras.models import Model, load_model
 
 from numpy.random import seed
 
-from Models.Utils import get_train_test_split, generate_aggregates
+from Models.UtilsEqualDistributions import get_train_test_split, generate_aggregates
 from Models.XGBoost.XGBoost import XGBoostClassifier
 import os.path
 
