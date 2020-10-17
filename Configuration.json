@@ -68,7 +68,7 @@
 	},
 	"training": {
 		"folds": 10,
-		"epochs": 1000
+		"epochs": 500
 	},
 	"model": {
 		"name": "lstm-binary-classifier",
